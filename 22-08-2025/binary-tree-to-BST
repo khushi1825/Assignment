@@ -1,0 +1,50 @@
+/*Structure of the node class is
+class Node
+{
+    int data;
+    Node left, right;
+    Node(int item){
+        data = item;
+        left = right = null;
+    }
+} */
+
+
+class Solution {
+    int index = 0;
+    
+    Node binaryTreeToBST(Node root) {
+        if (root == null) 
+            return null;
+        
+        
+        List<Integer> values = new ArrayList<>();
+        storeInorder(root, values);
+        
+        
+        Collections.sort(values);
+        
+        index = 0;
+        arrayToBST(root, values);
+        
+        return root;
+    }
+    
+    
+    void storeInorder(Node node, List<Integer> values) {
+        if (node == null) 
+            return;
+        storeInorder(node.left, values);
+        values.add(node.data);
+        storeInorder(node.right, values);
+    }
+    
+    
+    void arrayToBST(Node node, List<Integer> values) {
+        if (node == null) 
+            return;
+        arrayToBST(node.left, values);
+        node.data = values.get(index++);
+        arrayToBST(node.right, values);
+    }
+}
