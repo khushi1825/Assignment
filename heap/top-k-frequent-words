@@ -1,0 +1,51 @@
+class Solution {
+    public class Pair{
+        String s;
+        int freq;
+        Pair(String s,int freq){
+            this.s=s;
+            this.freq=freq;
+        }
+    }
+    public List<String> topKFrequent(String[] words, int k) {
+        int n=words.length;
+        HashMap<String,Integer> hash=new HashMap<>();
+        for(int i=0;i<n;i++){
+            hash.put(words[i],hash.getOrDefault(words[i],0)+1);
+        }
+        int len=hash.size();
+        Pair [] arr=new Pair[len];
+        int idx=0;
+        for(String key:hash.keySet()){
+            arr[idx]=new Pair(key,hash.get(key));
+            idx++;
+        }
+        Arrays.sort(arr,new Comparator<Pair>(){
+            @Override
+            public int compare(Pair a,Pair b){
+                return a.s.compareTo(b.s);
+            }
+        });
+        PriorityQueue<Pair> pq=new PriorityQueue<>(new Comparator<Pair>(){
+            @Override
+            public int compare(Pair a,Pair b){
+                if(a.freq==b.freq){
+                    return b.s.compareTo(a.s);
+                }
+                return a.freq-b.freq;
+            }
+        });
+        for(int i=arr.length-1;i>=0;i--){
+            pq.add(new Pair(arr[i].s,arr[i].freq));
+            if(pq.size()>k){
+                pq.poll();
+            }
+        }
+        List<String> ans=new ArrayList<>();
+        while(!pq.isEmpty()){
+            ans.add(pq.poll().s);
+        }
+        Collections.reverse(ans);
+        return ans;
+    }
+}
