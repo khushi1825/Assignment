@@ -1,0 +1,21 @@
+class Solution {
+    public int kthSmallest(int[][] mat, int k) {
+        int C = Math.min(mat[0].length, k);
+
+        var maxHeap = new PriorityQueue<Integer>(Collections.reverseOrder());
+        maxHeap.add(0);
+        for (var row : mat) {
+            var nextHeap = new PriorityQueue<Integer>(Collections.reverseOrder());
+            for (int prevSum : maxHeap) {
+                for (int c = 0; c < C; c++) {
+                    nextHeap.add(prevSum + row[c]);
+                    if (nextHeap.size() > k) {
+                        nextHeap.poll();
+                    }
+                }
+            }
+            maxHeap = nextHeap;
+        }
+        return maxHeap.peek();
+    }
+}
