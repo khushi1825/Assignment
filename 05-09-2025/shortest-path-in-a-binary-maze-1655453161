@@ -1,0 +1,50 @@
+// User function Template for Java
+class Solution {
+    
+    static class Cell {
+        int r, c, dist;
+        Cell(int r, int c, int dist) {
+            this.r = r;
+            this.c = c;
+            this.dist = dist;
+        }
+    }
+
+    int shortestPath(int[][] grid, int[] source, int[] destination) {
+        int n = grid.length;
+        int m = grid[0].length;
+        if (grid[source[0]][source[1]] == 0 || grid[destination[0]][destination[1]] == 0) {
+            return -1;
+        }
+
+        boolean[][] visited = new boolean[n][m];
+        Queue<Cell> q = new LinkedList<>();
+        q.add(new Cell(source[0], source[1], 0));
+        visited[source[0]][source[1]] = true;
+
+        int[] dr = {-1, 1, 0, 0};  
+        int[] dc = {0, 0, -1, 1};
+
+        while (!q.isEmpty()) {
+            Cell curr = q.poll();
+            
+            if (curr.r == destination[0] && curr.c == destination[1]) {
+                return curr.dist;
+            }
+
+            for (int k = 0; k < 4; k++) {
+                int nr = curr.r + dr[k];
+                int nc = curr.c + dc[k];
+
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m 
+                    && grid[nr][nc] == 1 && !visited[nr][nc]) {
+                    
+                    visited[nr][nc] = true;
+                    q.add(new Cell(nr, nc, curr.dist + 1));
+                }
+            }
+        }
+
+        return -1; 
+    }
+}
