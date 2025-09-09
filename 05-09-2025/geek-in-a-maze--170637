@@ -1,0 +1,76 @@
+// User function Template for Java
+import java.util.*;
+
+class Solution {
+
+    static class State {
+        int r, c, u, d;
+        State(int r, int c, int u, int d) {
+            this.r = r;
+            this.c = c;
+            this.u = u;
+            this.d = d;
+        }
+    }
+
+    public static int numberOfCells(int n, int m, int r, int c, int u, int d, char mat[][]) {
+        if (mat[r][c] == '#') return 0; 
+        int[][] maxUp = new int[n][m];
+        int[][] maxDown = new int[n][m];
+        for (int[] row : maxUp) Arrays.fill(row, -1);
+        for (int[] row : maxDown) Arrays.fill(row, -1);
+
+        Queue<State> q = new LinkedList<>();
+        q.add(new State(r, c, u, d));
+        maxUp[r][c] = u;
+        maxDown[r][c] = d;
+
+        int count = 0;
+        boolean[][] counted = new boolean[n][m]; 
+
+        while (!q.isEmpty()) {
+            State cur = q.poll();
+            if (!counted[cur.r][cur.c]) {
+                counted[cur.r][cur.c] = true;
+                count++;
+            }
+
+            int nc = cur.c - 1;
+            while (nc >= 0 && mat[cur.r][nc] == '.') {
+                if (cur.u > maxUp[cur.r][nc] || cur.d > maxDown[cur.r][nc]) {
+                    maxUp[cur.r][nc] = cur.u;
+                    maxDown[cur.r][nc] = cur.d;
+                    q.add(new State(cur.r, nc, cur.u, cur.d));
+                }
+                nc--;
+            }
+            nc = cur.c + 1;
+            while (nc < m && mat[cur.r][nc] == '.') {
+                if (cur.u > maxUp[cur.r][nc] || cur.d > maxDown[cur.r][nc]) {
+                    maxUp[cur.r][nc] = cur.u;
+                    maxDown[cur.r][nc] = cur.d;
+                    q.add(new State(cur.r, nc, cur.u, cur.d));
+                }
+                nc++;
+            }
+
+            if (cur.r > 0 && mat[cur.r - 1][cur.c] == '.' && cur.u > 0) {
+                if (cur.u - 1 > maxUp[cur.r - 1][cur.c] || cur.d > maxDown[cur.r - 1][cur.c]) {
+                    maxUp[cur.r - 1][cur.c] = cur.u - 1;
+                    maxDown[cur.r - 1][cur.c] = cur.d;
+                    q.add(new State(cur.r - 1, cur.c, cur.u - 1, cur.d));
+                }
+            }
+
+            if (cur.r < n - 1 && mat[cur.r + 1][cur.c] == '.' && cur.d > 0) {
+                if (cur.u > maxUp[cur.r + 1][cur.c] || cur.d - 1 > maxDown[cur.r + 1][cur.c]) {
+                    maxUp[cur.r + 1][cur.c] = cur.u;
+                    maxDown[cur.r + 1][cur.c] = cur.d - 1;
+                    q.add(new State(cur.r + 1, cur.c, cur.u, cur.d - 1));
+                }
+            }
+        }
+
+        return count;
+    }
+}
