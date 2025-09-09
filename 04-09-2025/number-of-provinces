@@ -1,0 +1,34 @@
+// User function Template for Java
+class Solution {
+    
+    static void bfs(int src, ArrayList<ArrayList<Integer>> adj, boolean[] visited, int V) {
+        Queue<Integer> q = new LinkedList<>();
+        visited[src] = true;
+        q.add(src);
+        
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            
+            for (int nbr = 0; nbr < V; nbr++) {
+                if (adj.get(node).get(nbr) == 1 && !visited[nbr]) {
+                    visited[nbr] = true;
+                    q.add(nbr);
+                }
+            }
+        }
+    }
+    
+    static int numProvinces(ArrayList<ArrayList<Integer>> adj, int V) {
+        boolean[] visited = new boolean[V];
+        int count = 0;
+        
+        for (int i = 0; i < V; i++) {
+            if (!visited[i]) {
+                bfs(i, adj, visited, V);
+                count++;
+            }
+        }
+        
+        return count;
+    }
+}
