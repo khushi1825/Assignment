@@ -1,0 +1,45 @@
+import java.util.*;
+
+class Solution {
+    public boolean is_Possible(int[][] grid) {
+        int n = grid.length;
+        boolean[][] visited = new boolean[n][n];
+        int srcR = -1, srcC = -1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    srcR = i;
+                    srcC = j;
+                    break;
+                }
+            }
+        }
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{srcR, srcC});
+        visited[srcR][srcC] = true;
+        
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+        
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+            int r = curr[0], c = curr[1];
+            
+            if (grid[r][c] == 2) return true; 
+            
+            for (int k = 0; k < 4; k++) {
+                int nr = r + dr[k];
+                int nc = c + dc[k];
+                
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n &&
+                    !visited[nr][nc] && grid[nr][nc] != 0) {
+                    
+                    visited[nr][nc] = true;
+                    q.add(new int[]{nr, nc});
+                }
+            }
+        }
+        
+        return false; 
+    }
+}
