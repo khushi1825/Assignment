@@ -1,0 +1,55 @@
+
+
+class Solution {
+    public int orangesRotting(int[][] mat) {
+        // Code here
+        int n = mat.length;
+        int m = mat[0].length;
+
+        Queue<int[]> rottenQueue = new LinkedList<>();
+        int freshOranges = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] == 2) {
+                    rottenQueue.offer(new int[]{i, j, 0}); 
+                } else if (mat[i][j] == 1) {
+                    freshOranges++;
+                }
+            }
+        }
+
+        if (freshOranges == 0) {
+            return 0; 
+        }
+
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; 
+        int maxTime = 0;
+        int rottenCount = 0;
+
+        while (!rottenQueue.isEmpty()) {
+            int[] current = rottenQueue.poll();
+            int row = current[0];
+            int col = current[1];
+            int time = current[2];
+
+            maxTime = Math.max(maxTime, time);
+
+            for (int[] dir : directions) {
+                int newRow = row + dir[0];
+                int newCol = col + dir[1];
+
+                if (newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && mat[newRow][newCol] == 1) {
+                    mat[newRow][newCol] = 2; 
+                    rottenQueue.offer(new int[]{newRow, newCol, time + 1});
+                    rottenCount++;
+                }
+            }
+        }
+
+        if (rottenCount == freshOranges) {
+            return maxTime;
+        } else {
+            return -1; 
+        }
+    }
+}
