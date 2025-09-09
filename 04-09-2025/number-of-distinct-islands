@@ -1,0 +1,43 @@
+// User function Template for Java
+
+class Solution {
+    
+    public void dfs(int r, int c, int baseR, int baseC, int[][] grid, boolean[][] visited, 
+                     ArrayList<String> shape, int n, int m) {
+        visited[r][c] = true;
+        shape.add((r - baseR) + "," + (c - baseC)); 
+        
+        int[] dr = {1, -1, 0, 0};
+        int[] dc = {0, 0, 1, -1};
+        
+        for (int i = 0; i < 4; i++) {
+            int nr = r + dr[i];
+            int nc = c + dc[i];
+            
+            if (nr >= 0 && nr < n && nc >= 0 && nc < m && 
+                !visited[nr][nc] && grid[nr][nc] == 1) {
+                dfs(nr, nc, baseR, baseC, grid, visited, shape, n, m);
+            }
+        }
+    }
+    
+    int countDistinctIslands(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        boolean[][] visited = new boolean[n][m];
+        
+        HashSet<String> uniqueIslands = new HashSet<>();
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (!visited[i][j] && grid[i][j] == 1) {
+                    ArrayList<String> shape = new ArrayList<>();
+                    dfs(i, j, i, j, grid, visited, shape, n, m);
+                    uniqueIslands.add(String.join(";", shape));
+                }
+            }
+        }
+        
+        return uniqueIslands.size();
+    }
+}
